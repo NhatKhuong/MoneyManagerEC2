@@ -38,4 +38,10 @@ public class UserController {
         userEx.setUrlPic(user.getUrlPic());
         return userService.Update(userEx);
     }
+
+    @DeleteMapping("/{id}")
+    public boolean delete(@PathVariable("id") String id){
+        User userEx = findById(id);
+        return userService.delete(userEx);
+    }
 }
