@@ -3,6 +3,7 @@ package com.example.moneymanager2.service;
 import com.example.moneymanager2.model.Basket;
 import com.example.moneymanager2.model.User;
 import com.example.moneymanager2.repository.BasketRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class BasketService {
         return basket;
     }
 
-    public boolean Update(Basket basket){
+    public boolean update(Basket basket){
         try{
             basketRepository.save(basket);
             return true;
@@ -56,5 +57,9 @@ public class BasketService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Basket> findAllByUserId(String userId){
+        return basketRepository.findAllByUserId(userId);
     }
 }

@@ -2,6 +2,7 @@ package com.example.moneymanager2.service;
 
 import com.example.moneymanager2.model.Basket;
 import com.example.moneymanager2.model.Transaction;
+import com.example.moneymanager2.model.User;
 import com.example.moneymanager2.repository.TransactionRepositoty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class TransactionService {
         return transaction;
     }
 
-    public boolean Update(Transaction transaction){
+    public boolean update(Transaction transaction){
         try{
             transactionRepositoty.save(transaction);
             return true;
