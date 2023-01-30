@@ -59,4 +59,12 @@ public class TransactionService {
         }
         return null;
     }
+
+    public List<Transaction> findAllByUserId(String userId){
+        return transactionRepositoty.findAllByUserId(userId);
+    }
+
+    public List<Transaction> findAllByUserIdAndBasketId(String userId, String basketId){
+        return transactionRepositoty.findAllByUserIdAndBasketId(userId,basketId);
+    }
 }

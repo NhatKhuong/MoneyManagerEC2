@@ -42,4 +42,13 @@ public class TransactionController {
         transactionService.update(transactionEx);
         return transactionEx;
     }
+    @GetMapping("/get-all-by-userId/{userId}")
+    public List<Transaction> findAllByUserId(@PathVariable("userId") String userId){
+        return transactionService.findAllByUserId(userId);
+    }
+
+    @GetMapping("/get-all-by-userId-and-basketId/{userId}/{basketId}")
+    public List<Transaction> findAllByUserId(@PathVariable("userId") String userId, @PathVariable("basketId") String basketId){
+        return transactionService.findAllByUserIdAndBasketId(userId,basketId);
+    }
 }
