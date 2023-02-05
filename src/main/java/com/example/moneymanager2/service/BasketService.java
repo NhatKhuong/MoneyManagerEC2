@@ -61,7 +61,7 @@ public class BasketService {
         return null;
     }
 
-    public List<Basket> findAllByUserId(String userId){
-        return basketRepository.findAllByUserId(userId);
+    public List<Basket> findAllByUserIdAndTpe(String userId, int type){
+        return basketRepository.findAllByUserIdAndType(userId,type);
     }
 }

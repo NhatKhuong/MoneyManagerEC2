@@ -60,8 +60,8 @@ public class TransactionService {
         return null;
     }
 
-    public List<Transaction> findAllByUserId(String userId){
-        return transactionRepositoty.findAllByUserId(userId);
+    public List<Transaction> findAllByUserIdAndType(String userId,int type){
+        return transactionRepositoty.findAllByUserIdAndType(userId, type);
     }
 
     public List<Transaction> findAllByUserIdAndBasketId(String userId, String basketId){

@@ -50,8 +50,8 @@ public class BasketController {
         return basketEx;
     }
 
-    @GetMapping("/get-all-by-userId/{userId}")
-    public List<Basket> getAllBasketByUserId(@PathVariable("userId") String userId){
-        return basketService.findAllByUserId(userId);
+    @GetMapping("/get-all-by-userId-and-type/{userId}/{type}")
+    public List<Basket> getAllBasketByUserId(@PathVariable("userId") String userId, @PathVariable("type") int type){
+        return basketService.findAllByUserIdAndTpe(userId,type);
     }
 }

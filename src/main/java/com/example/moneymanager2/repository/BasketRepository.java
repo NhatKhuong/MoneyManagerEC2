@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface BasketRepository extends MongoRepository<Basket,String> {
-    public List<Basket> findAllByUserId(String userId);
+    public List<Basket> findAllByUserIdAndType(String userId,int type);
 }

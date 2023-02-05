@@ -20,6 +20,8 @@ public class Basket {
     private double totalSpending;
     private double totalIncome;
 
+    private Integer type;
+
     public Basket(String userId, String name, double precent, double availableBalances, double totalSpending, double totalIncome) {
         this.userId = userId;
         this.name = name;

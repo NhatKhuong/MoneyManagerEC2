@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface TransactionRepositoty extends MongoRepository<Transaction,String> {
-    public List<Transaction> findAllByUserId(String userId);
+    public List<Transaction> findAllByUserIdAndType(String userId,int type);
     public List<Transaction> findAllByUserIdAndBasketId(String userId, String basketId);
 }
