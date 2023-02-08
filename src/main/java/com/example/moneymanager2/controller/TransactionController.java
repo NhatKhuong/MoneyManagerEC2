@@ -2,6 +2,7 @@ package com.example.moneymanager2.controller;
 
 import com.example.moneymanager2.model.Basket;
 import com.example.moneymanager2.model.Transaction;
+import com.example.moneymanager2.request.SearchTransactionFromDateToDate;
 import com.example.moneymanager2.service.BasketService;
 import com.example.moneymanager2.service.TransactionService;
 import jdk.jfr.Frequency;
@@ -50,5 +51,9 @@ public class TransactionController {
     @GetMapping("/get-all-by-userId-and-basketId/{userId}/{basketId}")
     public List<Transaction> findAllByUserId(@PathVariable("userId") String userId, @PathVariable("basketId") String basketId){
         return transactionService.findAllByUserIdAndBasketId(userId,basketId);
+    }
+    @PostMapping("/get-all-by-userId-and-create-date/{userId}")
+    public List<Transaction> findAllByUserId(@PathVariable("userId") String userId, @RequestBody SearchTransactionFromDateToDate searchTransactionFromDateToDate){
+        return transactionService.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate);
     }
 }

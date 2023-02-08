@@ -4,9 +4,11 @@ import com.example.moneymanager2.model.Basket;
 import com.example.moneymanager2.model.Transaction;
 import com.example.moneymanager2.model.User;
 import com.example.moneymanager2.repository.TransactionRepositoty;
+import com.example.moneymanager2.request.SearchTransactionFromDateToDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -66,5 +68,9 @@ public class TransactionService {
 
     public List<Transaction> findAllByUserIdAndBasketId(String userId, String basketId){
         return transactionRepositoty.findAllByUserIdAndBasketId(userId,basketId);
+    }
+
+    public List<Transaction> findAllByUserIdAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
+        return transactionRepositoty.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
     }
 }
