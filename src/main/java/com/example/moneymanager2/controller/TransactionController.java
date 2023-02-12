@@ -9,6 +9,9 @@ import jdk.jfr.Frequency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 @RestController
 @RequestMapping("/api/transaction")
@@ -54,6 +57,16 @@ public class TransactionController {
     }
     @PostMapping("/get-all-by-userId-and-create-date/{userId}")
     public List<Transaction> findAllByUserId(@PathVariable("userId") String userId, @RequestBody SearchTransactionFromDateToDate searchTransactionFromDateToDate){
-        return transactionService.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate);
+        return transactionService.findAllByUserIdAndTypeAndCreateDateBetween(userId,searchTransactionFromDateToDate);
     }
+
+    @PostMapping("/test")
+    public List<Double> test(@ RequestBody SearchTransactionFromDateToDate searchTransactionFromDateToDate){
+//        List<Transaction> lst = transactionService.findAll();
+//        Transaction transaction = lst.get(0);
+//        LocalDate currentDate = convertToLocalDateViaInstant(transaction.getCreateDate());
+//        return "date is"+ currentDate.getDayOfMonth() + "mounth is"+ currentDate.getMonthValue() + "year is"+currentDate.getYear();
+        return transactionService.getTotalTransactionIncomeByDateOfMonth(searchTransactionFromDateToDate);
+    }
+
 }

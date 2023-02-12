@@ -5,11 +5,17 @@ import com.example.moneymanager2.model.Transaction;
 import com.example.moneymanager2.model.User;
 import com.example.moneymanager2.repository.TransactionRepositoty;
 import com.example.moneymanager2.request.SearchTransactionFromDateToDate;
+import com.example.moneymanager2.util.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TransactionService {
@@ -72,5 +78,80 @@ public class TransactionService {
 
     public List<Transaction> findAllByUserIdAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
         return transactionRepositoty.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
+    }
+
+    public List<Transaction> findAllByUserIdAndTypeAndCreateDateBetween(String userId, SearchTransactionFromDateToDate searchTransactionFromDateToDate){
+        if(Objects.isNull(searchTransactionFromDateToDate)){
+            return transactionRepositoty.findAllByUserIdAndCreateDateBetween(userId,searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
+        } else {
+            return transactionRepositoty.findAllByUserIdAndTypeAndCreateDateBetween(userId,searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getFromDate(),searchTransactionFromDateToDate.getToDate());
+        }
+    }
+
+    public List<Double> getTotalTransactionIncomeByDateOfMonth(SearchTransactionFromDateToDate searchTransactionFromDateToDate){
+        List<Double> lstResult = new ArrayList<>();
+        if(!(searchTransactionFromDateToDate.getMonth() == 0)){
+//            Date date = new Date(1,searchTransactionFromDateToDate.getMonth(),searchTransactionFromDateToDate.getYear());
+            LocalDate localDate = LocalDate.of(searchTransactionFromDateToDate.getYear(),searchTransactionFromDateToDate.getMonth(),1);
+            Date dateStart = UtilService.atStartOfDay(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            LocalDate dateEndLocal = localDate.withDayOfMonth(localDate.getMonth().length(localDate.isLeapYear()));
+            Date dateEnd = UtilService.setDateEndDay(new Date(dateEndLocal.getYear(),dateEndLocal.getMonthValue(),dateEndLocal.getDayOfMonth()));
+            List<Transaction> lst = new ArrayList<>();
+            if(Objects.isNull(searchTransactionFromDateToDate.getBasketId())){
+                lst = transactionRepositoty.findAllByUserIdAndTypeAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),dateStart,dateEnd);
+
+            } else {
+                lst = transactionRepositoty.findAllByUserIdAndTypeAndBasketIdAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getBasketId(),dateStart,dateEnd);
+            }
+
+            for(int i = 1; i <= getNumberOfDaysInMonth(searchTransactionFromDateToDate.getYear(), searchTransactionFromDateToDate.getMonth()); i++){
+                double money = 0.0;
+                for (Transaction transaction : lst) {
+                    if(transaction.getCreateDate().getDate() == i && transaction.getType() == searchTransactionFromDateToDate.getType()){
+                        money = money + transaction.getMoneyTransaction();
+                    }
+                }
+                lstResult.add(money);
+            }
+        } else {
+            LocalDate localDate = LocalDate.of(searchTransactionFromDateToDate.getYear(), 1,1);
+            LocalDate localDateEnd = LocalDate.of(searchTransactionFromDateToDate.getYear(), 12,31);
+            LocalDate dateEndLocal = localDate.withDayOfMonth(localDateEnd.getMonth().length(localDateEnd.isLeapYear()));
+            Date dateStart = UtilService.atStartOfDay(new Date(localDate.getYear(),0, localDate.getDayOfMonth()));
+            Date dateEnd = UtilService.setDateEndDay(new Date(dateEndLocal.getYear(),11, 31));
+            List<Transaction> lst = new ArrayList<>();
+            if(Objects.isNull(searchTransactionFromDateToDate.getBasketId())){
+                lst = transactionRepositoty.findAllByUserIdAndTypeAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),dateStart,dateEnd);
+
+            } else {
+                lst = transactionRepositoty.findAllByUserIdAndTypeAndBasketIdAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),searchTransactionFromDateToDate.getBasketId(),dateStart,dateEnd);
+            }
+
+            for(int i = 0; i < 12; i++){
+                double money = 0.0;
+                for (Transaction transaction : lst) {
+                    if(transaction.getCreateDate().getMonth() == i && transaction.getType() == searchTransactionFromDateToDate.getType()){
+                        money = money + transaction.getMoneyTransaction();
+                    }
+                }
+                lstResult.add(money);
+            }
+
+        }
+        return lstResult;
+
+    }
+
+    public static int getNumberOfDaysInMonth(int year,int month)
+    {
+        YearMonth yearMonthObject = YearMonth.of(year, month);
+        int daysInMonth = yearMonthObject.lengthOfMonth();
+        return daysInMonth;
+    }
+
+    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 }

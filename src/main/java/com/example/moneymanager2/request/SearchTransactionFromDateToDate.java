@@ -11,4 +11,9 @@ import java.util.Date;
 public class SearchTransactionFromDateToDate {
     private Date fromDate;
     private Date toDate;
+    private Integer type;
+    private String userId;
+    private int month;
+    private int year;
+    private String basketId;
 }
