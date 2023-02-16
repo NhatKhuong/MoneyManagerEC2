@@ -14,4 +14,5 @@ public interface TransactionRepositoty extends MongoRepository<Transaction,Strin
     public List<Transaction> findAllByUserIdAndCreateDateBetween(String userId, Date from, Date to);
     public List<Transaction> findAllByUserIdAndTypeAndCreateDateBetween(String userId, int type, Date from, Date to);
     public List<Transaction> findAllByUserIdAndTypeAndBasketIdAndCreateDateBetween(String userId, int type,String basketId, Date from, Date to);
+    public List<Transaction> findAllByBasketId(String basketId);
 }

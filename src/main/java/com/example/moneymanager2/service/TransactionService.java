@@ -72,6 +72,10 @@ public class TransactionService {
         return transactionRepositoty.findAllByUserIdAndType(userId, type);
     }
 
+    public List<Transaction> findAllByBasketId(String basketId) {
+        return transactionRepositoty.findAllByBasketId(basketId);
+    }
+
     public List<Transaction> findAllByUserIdAndBasketId(String userId, String basketId){
         return transactionRepositoty.findAllByUserIdAndBasketId(userId,basketId);
     }
@@ -91,11 +95,10 @@ public class TransactionService {
     public List<Double> getTotalTransactionIncomeByDateOfMonth(SearchTransactionFromDateToDate searchTransactionFromDateToDate){
         List<Double> lstResult = new ArrayList<>();
         if(!(searchTransactionFromDateToDate.getMonth() == 0)){
-//            Date date = new Date(1,searchTransactionFromDateToDate.getMonth(),searchTransactionFromDateToDate.getYear());
             LocalDate localDate = LocalDate.of(searchTransactionFromDateToDate.getYear(),searchTransactionFromDateToDate.getMonth(),1);
             Date dateStart = UtilService.atStartOfDay(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
             LocalDate dateEndLocal = localDate.withDayOfMonth(localDate.getMonth().length(localDate.isLeapYear()));
-            Date dateEnd = UtilService.setDateEndDay(new Date(dateEndLocal.getYear(),dateEndLocal.getMonthValue(),dateEndLocal.getDayOfMonth()));
+            Date dateEnd = UtilService.setDateEndDay(Date.from(dateEndLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
             List<Transaction> lst = new ArrayList<>();
             if(Objects.isNull(searchTransactionFromDateToDate.getBasketId())){
                 lst = transactionRepositoty.findAllByUserIdAndTypeAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),dateStart,dateEnd);
@@ -116,9 +119,8 @@ public class TransactionService {
         } else {
             LocalDate localDate = LocalDate.of(searchTransactionFromDateToDate.getYear(), 1,1);
             LocalDate localDateEnd = LocalDate.of(searchTransactionFromDateToDate.getYear(), 12,31);
-            LocalDate dateEndLocal = localDate.withDayOfMonth(localDateEnd.getMonth().length(localDateEnd.isLeapYear()));
-            Date dateStart = UtilService.atStartOfDay(new Date(localDate.getYear(),0, localDate.getDayOfMonth()));
-            Date dateEnd = UtilService.setDateEndDay(new Date(dateEndLocal.getYear(),11, 31));
+            Date dateStart = UtilService.atStartOfDay(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            Date dateEnd = UtilService.setDateEndDay(Date.from(localDateEnd.atStartOfDay(ZoneId.systemDefault()).toInstant()));
             List<Transaction> lst = new ArrayList<>();
             if(Objects.isNull(searchTransactionFromDateToDate.getBasketId())){
                 lst = transactionRepositoty.findAllByUserIdAndTypeAndCreateDateBetween(searchTransactionFromDateToDate.getUserId(),searchTransactionFromDateToDate.getType(),dateStart,dateEnd);

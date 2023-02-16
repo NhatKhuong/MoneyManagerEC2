@@ -1,8 +1,10 @@
 package com.example.moneymanager2.service;
 
 import com.example.moneymanager2.model.Basket;
+import com.example.moneymanager2.model.Transaction;
 import com.example.moneymanager2.model.User;
 import com.example.moneymanager2.repository.BasketRepository;
+import com.example.moneymanager2.repository.TransactionRepositoty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,11 @@ import java.util.List;
 public class BasketService {
     @Autowired
     private BasketRepository basketRepository;
+
+    @Autowired
+    private TransactionRepositoty transactionRepositoty;
+    @Autowired
+    private TransactionService transactionService;
 
     public boolean save(Basket basket){
         try{
@@ -28,6 +35,10 @@ public class BasketService {
     public boolean delete(Basket basket){
         try{
             basketRepository.delete(basket);
+            List<Transaction> lst = transactionService.findAllByBasketId(basket.getId());
+            for (Transaction item : lst) {
+                transactionRepositoty.delete(item);
+            }
             return true;
         }catch (Exception e){
             e.printStackTrace();

@@ -60,12 +60,8 @@ public class TransactionController {
         return transactionService.findAllByUserIdAndTypeAndCreateDateBetween(userId,searchTransactionFromDateToDate);
     }
 
-    @PostMapping("/test")
+    @PostMapping("/get-chart")
     public List<Double> test(@ RequestBody SearchTransactionFromDateToDate searchTransactionFromDateToDate){
-//        List<Transaction> lst = transactionService.findAll();
-//        Transaction transaction = lst.get(0);
-//        LocalDate currentDate = convertToLocalDateViaInstant(transaction.getCreateDate());
-//        return "date is"+ currentDate.getDayOfMonth() + "mounth is"+ currentDate.getMonthValue() + "year is"+currentDate.getYear();
         return transactionService.getTotalTransactionIncomeByDateOfMonth(searchTransactionFromDateToDate);
     }
 
